@@ -28,6 +28,7 @@ def alpha001(dfs):
     ret = get_pct_ret(df)
 
     win = 20
+    print ret
     ret[ret < 0] = ret.rolling(window=win).std()
     ret = ret[win-1:]
     ret1 = ret.copy()

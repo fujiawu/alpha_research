@@ -25,7 +25,7 @@ normal = df['SPY'].copy()
 val = normal.values
 sigma = alpha.get_abs_ret(df)['SPY'].std()*2
 for i in range(1, len(val)):
-    val[i] = max(np.random.normal(val[i-1],sigma), 0)
+    val[i] = max(np.random.normal(val[i-1], sigma), 0)
 df['NOM2'] = normal
 
 
@@ -34,12 +34,23 @@ momentum = df['SPY'].copy()
 val = momentum.values
 sigma = alpha.get_abs_ret(df)['SPY'].std()
 for i in range(1, len(val)):
-    inc = 2 * ( i % 5 - 2.5 ) / 2.5
+    inc = 2 * (i % 5 - 2.5) / 2.5
     val[i] = val[i-1] + inc*sigma
 df['MOM'] = momentum
 
+# create time series with momentum2
+momentum = df['SPY'].copy()
+val = momentum.values
+sigma = alpha.get_abs_ret(df)['SPY'].std()
+for i in range(1, len(val)):
+    inc = 2 * (i % 5 - 2.5) / 2.5
+    val[i] = val[i-1] + inc*sigma
+df['MOM2'] = momentum
+
+
 # drop some columns computing alpha
 df.drop('SPY', 1, inplace = True)
+df.drop('NOM', 1, inplace = True)
 df.drop('NOM2', 1, inplace = True)
 
 # calculate relative return
@@ -49,24 +60,25 @@ ret = alpha.get_pct_ret(df)
 alpha, ret1, argmax = alpha.alpha001(dfs)
 
 # drop some columsn for plotting
-alpha.drop('NOM', 1, inplace = True)
-# ret1.drop('NOM', 1, inplace = True)
-# argmax.drop('NOM', 1, inplace = True)
-# ret.drop('NOM', 1, inplace = True)
+#alpha.drop('NOM', 1, inplace = True)
+#ret1.drop('NOM', 1, inplace = True)
+#argmax.drop('NOM', 1, inplace = True)
+#ret.drop('NOM', 1, inplace = True)
 
 # add return plots
-ret_plot = ret.copy()
-ret_plot.drop('NOM', 1, inplace = True)
-ret_plot.drop('NOM', 1, inplace = True)
-ret_plot['ret'] = ret['MOM']
-ret_plot['ret1'] = ret1['MOM']
+#ret_plot = ret.copy()
+#ret_plot.drop('NOM', 1, inplace = True)
+#ret_plot.drop('NOM', 1, inplace = True)
+#ret_plot['ret'] = ret['MOM']
+#ret_plot['ret1'] = ret1['MOM']
 
 # plot
-findata.plot_data(ret_plot, kind='line', title = 'alpha')
-findata.plot_data(alpha, kind='line', title = 'alpha')
-findata.plot_data(argmax, kind='line', title = 'argmax')
+findata.plot_data(ret, kind='line', title='alpha')
+findata.plot_data(alpha, kind='line', title='alpha')
+findata.plot_data(argmax, kind='line', title='argmax')
 plt.show()
 
+print argmax
 
 # plot kind: line, bar, hist, hexbin, barh, box, kde, density, area, pie, scatter
 
